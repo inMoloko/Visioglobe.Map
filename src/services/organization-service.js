@@ -15,6 +15,12 @@ export default {
       },
       method: 'PATCH',
       body: JSON.stringify(organization)
-    }).then(i => i.json());
+    }).then(i => {
+      // if (i.headers.get('Content-Type')==="application/json") {
+      if(i.status === 204) {
+        return i;
+      }
+      return i.json()
+    });
   }
 }

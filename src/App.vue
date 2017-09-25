@@ -5,10 +5,6 @@
 </template>
 
 <script>
-
-  window.$ = window.jQuery = require('jquery');
-  //import 'visioglobe'
-  //window.vg = require('visioglobe');
   export default {
     name: 'app'
   }
@@ -24,8 +20,14 @@
     height: 100%;
     margin: 0;
   }
+
   #app {
     height: 100%;
     width: 100%;
+  }
+
+  .v-toaster div.v-toast.v-toast-error {
+    background-color: #df6d69;
+    border-color: #df6d69;
   }
 </style>

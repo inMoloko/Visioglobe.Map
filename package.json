@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
+    "v-toaster": "^1.0.2",
     "vue": "^2.4.2",
     "vue-on-click-outside": "^1.0.3",
     "vue-router": "^2.7.0",

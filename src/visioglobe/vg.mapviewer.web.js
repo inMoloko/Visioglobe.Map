@@ -1,12 +1,12 @@
 /* Visioglobe SDK Copyright 2014 */
 /* without requirejs */
-// var vg;
-// vg = (function (vg) {
+var vg;
+vg = (function (vg) {
 
  /* with requirejs (uncomment next line, comment two lines above)
  * make changes at the footer as well
  */
-define("visioweb",["jquery"],function(jQuery){
+//define("visioweb",["jquery"],function(jQuery){
 // Capture jQuery/$, do not interfere with client's jQuery
     var oldJQuery = window.jQuery, oldDollar = window.$; // #7187
     var jQuery, $;
@@ -25167,9 +25167,9 @@ define("visioweb",["jquery"],function(jQuery){
     return vg;
 
     /* without requirejs */
-//})(vg);
+})(vg);
 
 /* with requirejs (uncomment next line, comment line above) */
-});
+//});
 // module.exports =  vg;
 ///* end Visioglobe SDK*/

@@ -22,7 +22,7 @@
   import 'visioglobe';
   import {MyMultiBuildingView} from '@/visioglobe/MyMultiBuildingView.js'
   import OrganizationEditPopup from './organization-edit-popup.vue'
-  import userService from '@/services/user-service'
+  import UserService from '@/services/user-service'
   import organizationService from '@/services/organization-service'
 
   export default {
@@ -42,11 +42,29 @@
         this.currentShop = null;
         if (event.visioglobeID && event.organization) {
           event.organization.VisioglobeID = event.visioglobeID;
-//          this.$http.patch(`${__API__}/KazanOdata/VgIds(${event.organization.OrganizationID})`, {
           organizationService.patch({
             OrganizationID: event.organization.OrganizationID,
             VisioglobeID: event.organization.VisioglobeID
-          }, {credentials: true});
+          }).then(response => {
+            this.$toaster.success('Организация сохранена', {timeout: 5000});
+            this.mapviewer.setPlaceName(event.organization.VisioglobeID, event.organization.Name);
+          }, error => {
+            this.$toaster.error('Произошла ошибка');
+            console.error(error);
+          });
+        }
+        //Был сброс организации
+        if (!event.organization && this.organization) {
+          organizationService.patch({
+            OrganizationID: this.organization.OrganizationID,
+            VisioglobeID: null
+          }).then(response => {
+            this.$toaster.success('Организация сохранена', {timeout: 5000});
+            this.mapviewer.setPlaceName(this.organization.VisioglobeID, '');
+          }, error => {
+            this.$toaster.error('Произошла ошибка');
+            console.error(error);
+          });
         }
       },
       setFloor(name) {
@@ -82,8 +100,9 @@
 
       this.organizationListPromise = organizationService.get();
 
+      const userService = new UserService(this.$toaster);
       this.userPromise = userService.get();// this.$http.get(`${__API__}/api/ManageUser`, {credentials: true});
-      this.userPromise.then(responce => {
+      this.userPromise = this.userPromise.then(responce => {
         let mapURL = __VISIOGLOBE__ + responce.CustomerID + '/descriptor.json';
         this.mapviewer = new vg.mapviewer.Mapviewer();
         let mapviewer_parameters = {
@@ -103,13 +122,20 @@
             });
             self.multiBuildingView = MyMultiBuildingView.setupMultiBuilding(self.mapviewer);
 
-            let viewpoint_options = {points: [self.mapviewer.camera.position], left: 500};
-            self.mapviewer.camera.position = self.mapviewer.getViewpointFromPositions(viewpoint_options);
-            self.setFloor(self.floors[0].name);
+            let floor = self.floors[0].name;
+            let viewpoint_options = {points: Object.values(self.mapviewer.getPoints()).filter(i => i.floor === floor)};
+            let position = self.mapviewer.getViewpointFromPositions(viewpoint_options);
+            position.radius -= 100;
+            self.mapviewer.camera.position = position;
+            self.setFloor(floor);
           });
+        return true;
       });
-
-
+      Promise.all([this.userPromise, this.organizationListPromise]).then(i => {
+        i[1].value.filter(j => j.VisioglobeID).forEach(j => {
+          this.mapviewer.setPlaceName(j.VisioglobeID, j.Name);
+        });
+      });
     }
   }
 </script>

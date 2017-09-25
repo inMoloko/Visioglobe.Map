@@ -14,9 +14,12 @@
               <label for="organization">
                 Организация
               </label>
-              <v-select id="organization" :options="organizations" v-model="organization" label="Name"></v-select>
-              <!--<autocomplete id="organization" v-model="organization"-->
-              <!--:suggestions="organizations"></autocomplete>-->
+              <div class="form-control-reset">
+                <v-select id="organization" :options="organizations" v-model="organization" label="Name"></v-select>
+                <!--<autocomplete id="organization" v-model="organization"-->
+                <!--:suggestions="organizations"></autocomplete>-->
+                <button type="button" class="reset-btn" @click="reset">X</button>
+              </div>
             </div>
             <div class="form-control">
               <label>
@@ -64,6 +67,9 @@
       }
     },
     methods: {
+      reset() {
+        this.organization = null;
+      },
       selected(event) {
         this.organization = event;
         console.log(event);
@@ -190,6 +196,27 @@
 
   .modal-leave-active {
     opacity: 0;
+  }
+
+  .form-control-reset {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .form-control-reset .dropdown {
+    flex-grow: 1;
+  }
+
+  .form-control-reset .dropdown-toggle {
+    border-right: none;
+  }
+
+  .reset-btn {
+    background-color: transparent;
+    border: 1px solid rgba(60,60,60,.26);
+    color: rgba(60,60,60,.26);
+    border-left: none;
+    padding: 0 5px;
   }
 
   .modal-enter .modal-container,
