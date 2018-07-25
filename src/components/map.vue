@@ -19,7 +19,8 @@
 </template>
 
 <script>
-  import 'visioglobe';
+  // import '@/visioglobe/visioglobe.js'
+  //import 'jquery'
   import {MyMultiBuildingView} from '@/visioglobe/MyMultiBuildingView.js'
   import OrganizationEditPopup from './organization-edit-popup.vue'
   import UserService from '@/services/user-service'
@@ -79,7 +80,7 @@
         //        console.log(element);
         if (element.vg) {
           idSrc = element.options ? element.options('id') : element.vg.id; //'KSK-15';
-          shop = this.mapviewer.getPlace(idSrc);
+          shop = this.mapviewer.getPOI(idSrc);
           if (shop === false) {
             return;
           }
@@ -111,7 +112,10 @@
         };
         const elm = document.querySelector('.canvas');
         this.mapviewer.initialize(elm, mapviewer_parameters)
-          .done(function () {
+          .catch(function (error) {
+            console.error(error);
+          })
+          .then(function () {
             self.mapviewer.start();
             let index = 1;
             self.floors = self.mapviewer.getFloors().filter(i => i.name !== 'outside').map(i => {
@@ -123,7 +127,7 @@
             self.multiBuildingView = MyMultiBuildingView.setupMultiBuilding(self.mapviewer);
 
             let floor = self.floors[0].name;
-            let viewpoint_options = {points: Object.values(self.mapviewer.getPoints()).filter(i => i.floor === floor)};
+            let viewpoint_options = {points: Object.values(self.mapviewer.getPOFs()).filter(i => i.floor === floor)};
             let position = self.mapviewer.getViewpointFromPositions(viewpoint_options);
             position.radius -= 100;
             self.mapviewer.camera.position = position;

@@ -1182,19 +1182,19 @@ MyMultiBuildingView.prototype.getMapStateForExploreState = function (exploreStat
             mapState.cameraConfig.pitch = this.globalModePitch;
 
             footprint = mapviewer.getFootprint(venueLayout.globalLayerID);
-            pointDescriptor = mapviewer.getPoint(venueLayout.globalLayerID);
+            pointDescriptor = mapviewer.getPOF(venueLayout.globalLayerID);
             paddingFactor = this.globalModePaddingFactor;
             break;
         case 'building':
             mapState.cameraConfig.pitch = this.buildingModePitch;
             footprint = mapviewer.getFootprint(targetBuildingID) || mapviewer.getFootprint(venueLayout.globalLayerID);
-            pointDescriptor = mapviewer.getPoint(targetBuildingID) || mapviewer.getPoint(venueLayout.globalLayerID);
+            pointDescriptor = mapviewer.getPOF(targetBuildingID) || mapviewer.getPOF(venueLayout.globalLayerID);
             paddingFactor = this.buildingModePaddingFactor;
             break;
         case 'floor':
             mapState.cameraConfig.pitch = this.floorModePitch;
             footprint = mapviewer.getFootprint(targetBuildingID) || mapviewer.getFootprint(venueLayout.globalLayerID);
-            pointDescriptor = mapviewer.getPoint(targetBuildingID) || mapviewer.getPoint(venueLayout.globalLayerID);
+            pointDescriptor = mapviewer.getPOF(targetBuildingID) || mapviewer.getPOF(venueLayout.globalLayerID);
             paddingFactor = this.floorModePaddingFactor;
             break;
     }
@@ -1768,7 +1768,7 @@ MyMultiBuildingView.parseVenueLayout = function (mapviewer, mapviewerFloorMap, v
         modelPOIs = [];
         if (!this.isWeb2D) {
             // This will get all the POIs with that ID, we need to pick only those that are models.
-            poisForID = mapviewer.getPoi(buildingID);
+            poisForID = mapviewer.getPOI(buildingID);
             if (typeof(poisForID) !== 'undefined') {
                 for (let i = 0; i < poisForID.length; i++) {
                     if (poisForID[i].options('model')) {
@@ -2221,7 +2221,7 @@ MyMultiBuildingView.prototype.setupActiveBuildingMarkerPOIs = function () {
     var buildingID;
     for (var i in buildings) {
         buildingID = buildings[i].id;
-        point = mapviewer.getPoint(buildingID);
+        point = mapviewer.getPOF(buildingID);
         // HBXX for the moment the HEIGHT is hardcoded
         if (point) {
             // VisioWeb: when creating POIs with id, we will know they are clicked
@@ -2688,7 +2688,7 @@ MyMultiBuildingView.prototype.setupMultibuildingFloorUI = function () {
             for (var building in _this.venueLayout.buildings) {
                 var buildingID = _this.venueLayout.buildings[building].id;
                 var footprint = mapviewer.getFootprint(buildingID);
-                var pointDescriptor = mapviewer.getPoint(buildingID);
+                var pointDescriptor = mapviewer.getPOF(buildingID);
                 var paddingFactor = _this.floorModePaddingFactor;
 
                 // set the pitch when calculating the getViewPointFromPositions
@@ -3032,7 +3032,7 @@ MyMultiBuildingView.setupMultiBuilding = function (mapviewer) {
     //multiBuildingView.setupMultibuildingFloorUI();
 
     // for debugging floor at a lower level
-    mapviewer.highlight(mapviewer.getPlace('B3-UL0-ID0077'), 0x00ff0000);
+    mapviewer.setPlaceColor(mapviewer.getPlace('B3-UL0-ID0077'), 0x00ff0000);
 
 
     var query = (jQuery.deparam && jQuery.deparam.querystring()) || {};
